@@ -1,0 +1,29 @@
+.home-container {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .grid-item {
+    text-decoration: none; /* Remove link underline */
+    color: inherit; /* Inherit text color */
+  }
+  
+  .square {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .square:hover {
+    background-color: #e0e0e0;
+  }
+  
