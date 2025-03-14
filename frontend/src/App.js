@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
-import TopSongsPage from './components/TopSongsPage';
+import SongsPage from './components/SongsPage';
 import AlbumsPage from './components/AlbumsPage';
 import ArtistsPage from './components/ArtistsPage';
 import CalendarPage from './components/CalendarPage';
@@ -12,7 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/songs" element={<TopSongsPage />} />
+        <Route path="/songs" element={<SongsPage />} />
         <Route path="/albums" element={<AlbumsPage />} />
         <Route path="/artists" element={<ArtistsPage />} />
         <Route path="/calendar" element={<CalendarPage />} />

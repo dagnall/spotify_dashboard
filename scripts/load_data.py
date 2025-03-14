@@ -76,6 +76,6 @@ def load_data_into_db(json_file, db_file):
     conn.close()
 
 # Usage
-json_file = "transformed_data3.json"
+json_file = "final_data.json"
 db_file = "my_spotify.db"
 load_data_into_db(json_file, db_file)
