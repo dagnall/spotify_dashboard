@@ -1,0 +1,110 @@
+/* Container for the entire page */
+.songs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Header styles */
+  .songs-container h1,
+  .songs-container h2 {
+    text-align: center;
+  }
+  
+  /* Top 10 songs section as squares */
+  .top-songs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1%;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+  
+  .top-song {
+    width: calc(20% - 2%); /* Approximately 5 squares per row */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .top-song:hover {
+    transform: scale(1.05);
+  }
+  
+  .top-song h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  .top-song p {
+    font-size: 0.9rem;
+    margin: 2px 0;
+  }
+  
+  /* Table for remaining songs */
+  .table-container {
+    margin-top: 20px;
+  }
+  
+  .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-container th,
+  .table-container td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .table-container th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Pagination controls */
+  .pagination {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .pagination button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .pagination button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 80%;
+  max-width: 400px;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
