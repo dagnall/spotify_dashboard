@@ -71,31 +71,44 @@ class AllSongsView(APIView):
          merged_songs = sorted(merged.values(), key=lambda x: x['total_seconds'], reverse=True)
          
          return Response(merged_songs)
+    
+class AllAlbumsView(APIView):
+    def get(self, request, format=None):
+         # First, perform the query and annotate with lowercased fields
+         albums = (
+           ListeningHistory.objects
+           .annotate(
+               album_name_lower=Lower('album_name'),
+               artist_name_lower=Lower('artist_name')
+           )
+           .values('album_name', 'artist_name', 'album_name_lower', 'artist_name_lower')
+           .annotate(total_seconds=Sum('sec_played'))
+           .order_by('-total_seconds')
+         )
+         albums = list(albums)
+         
+         # Post-process: merge albums that are the same based on normalized album and artist names.
+         merged = {}
+         for album in albums:
+             # Create a composite key using the lowercased album name and artist name.
+             key = (album['album_name_lower'], album['artist_name_lower'])
+             if key in merged:
+                 # Merge the playtime if the album already exists in the dictionary.
+                 merged[key]['total_seconds'] += album['total_seconds']
+             else:
+                 # Copy the album data into the merged dict.
+                 merged[key] = album.copy()
+         
+         # Remove the normalized fields if not needed by the frontend.
+         for album in merged.values():
+             del album['album_name_lower']
+             del album['artist_name_lower']
+         
+         # Sort the merged albums by total seconds played descending.
+         merged_albums = sorted(merged.values(), key=lambda x: x['total_seconds'], reverse=True)
+         
+         return Response(merged_albums)
 
-# class AllSongsView(APIView):
-#     def get(self, request, format=None):
-#          all_songs = (
-#            ListeningHistory.objects
-#            .annotate(
-#                track_name_lower=Lower('track_name'),
-#                artist_name_lower=Lower('artist_name'),
-#                album_name_lower=Lower('album_name')
-#            )
-#            .values('track_name_lower', 'artist_name_lower', 'album_name_lower')
-#            .annotate(
-#               total_seconds=Sum('sec_played'),
-#               track_name=Max('track_name'),       # Preserves a display version
-#               artist_name=Max('artist_name'),
-#               album_name=Max('album_name')
-#            )
-#            .order_by('-total_seconds')
-#          )
-#          # Remove normalized fields from the output if you don't need them
-#          for song in all_songs:
-#              del song['track_name_lower']
-#              del song['artist_name_lower']
-#              del song['album_name_lower']
-#          return Response(all_songs)
 
 
 

@@ -1,0 +1,33 @@
+/* src/components/NavigationBar.css */
+.navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+  }
+  
+  .nav-left .nav-home {
+    font-size: 1.2rem;
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .nav-right {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .nav-right .nav-item {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 5px 10px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .nav-right .nav-item:hover {
+    background-color: #555;
+    border-radius: 4px;
+  }
+  
