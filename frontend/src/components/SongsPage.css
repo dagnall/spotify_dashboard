@@ -19,9 +19,11 @@
     margin-bottom: 20px;
     justify-content: center;
   }
-  
-  .top-song {
-    width: calc(20% - 2%); /* Approximately 5 squares per row */
+
+  .top-song-link {
+    display: block;                  /* Key: make it block-level (or flex) */
+    width: calc(20% - 2%);           /* 5 items per row, adjusting for gap/margins */
+    margin: 1% 0;                    /* Vertical spacing */
     border: 1px solid #ccc;
     padding: 10px;
     box-sizing: border-box;
@@ -29,12 +31,43 @@
     border-radius: 4px;
     background-color: #f9f9f9;
     transition: transform 0.2s ease;
+    text-decoration: none;           /* Remove default link underline */
+    color: inherit;                  /* Inherit text color */
     cursor: pointer;
   }
+
+  /* Scale on hover */
+.top-song-link:hover {
+  transform: scale(1.05);
+}
+
+/* Headings and paragraphs within the link */
+.top-song-link h3 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  text-transform: capitalize; /* optional, just an example */
+}
+
+.top-song-link p {
+  font-size: 0.9rem;
+  margin: 2px 0;
+}
   
-  .top-song:hover {
-    transform: scale(1.05);
-  }
+/* .top-song {
+  width: calc(20% - 2%); 
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+} */
+  
+.top-song:hover {
+  transform: scale(1.05);
+}
   
   .top-song h3 {
     font-size: 1rem;
@@ -108,3 +141,9 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.top-song-link {
+  text-decoration: none;
+  color: inherit;
+}
+

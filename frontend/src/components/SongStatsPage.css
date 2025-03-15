@@ -1,0 +1,33 @@
+/* src/components/SongStatsPage.css */
+.song-stats-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .song-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Placeholder for album cover */
+  .album-cover-placeholder {
+    width: 150px;
+    height: 150px;
+    background-color: #ddd;
+    margin-right: 20px;
+  }
+  
+  .song-basic-info h2 {
+    margin: 0 0 10px 0;
+  }
+  
+  .charts {
+    margin-top: 20px;
+  }
+  
+  .chart-container {
+    margin-bottom: 30px;
+  }
+  
