@@ -109,6 +109,32 @@ class AllAlbumsView(APIView):
          
          return Response(merged_albums)
 
-
+class AllArtistsView(APIView):
+    def get(self, request, format=None):
+         # First, query and annotate the normalized artist name
+         artists = (
+           ListeningHistory.objects
+           .annotate(artist_name_lower=Lower('artist_name'))
+           .values('artist_name', 'artist_name_lower')
+           .annotate(total_seconds=Sum('sec_played'))
+           .order_by('-total_seconds')
+         )
+         artists = list(artists)
+         
+         # Post-process: merge entries that are the same when normalized
+         merged = {}
+         for artist in artists:
+             key = artist['artist_name_lower']
+             if key in merged:
+                 merged[key]['total_seconds'] += artist['total_seconds']
+             else:
+                 merged[key] = artist.copy()
+         
+         # Remove the normalized field from the output
+         for artist in merged.values():
+             del artist['artist_name_lower']
+         
+         merged_artists = sorted(merged.values(), key=lambda x: x['total_seconds'], reverse=True)
+         return Response(merged_artists)
 
 
