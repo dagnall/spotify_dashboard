@@ -1,4 +1,4 @@
-from django.db.models import Sum, Max
+from django.db.models import Sum, Max, Count
 from django.db.models.functions import Lower
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -138,3 +138,46 @@ class AllArtistsView(APIView):
          return Response(merged_artists)
 
 
+class SongStatsView(APIView):
+    def get(self, request, format=None):
+        # Get the song parameters from the query string
+        track = request.query_params.get('track')
+        artist = request.query_params.get('artist')
+        album = request.query_params.get('album')
+
+        if not (track and artist and album):
+            return Response({"error": "track, artist, and album parameters are required"}, status=400)
+        
+        # Filter listening history for this song using case-insensitive matching.
+        qs = ListeningHistory.objects.filter(
+            track_name__iexact=track,
+            artist_name__iexact=artist,
+            album_name__iexact=album
+        )
+
+        # Aggregate total seconds played for the song.
+        total_seconds = qs.aggregate(total_seconds=Sum('sec_played'))['total_seconds'] or 0
+
+        # Use the pre-computed fields directly.
+        weekday_data = qs.values('weekday').annotate(count=Count('id')).order_by('weekday')
+        hour_data = qs.values('hour').annotate(count=Count('id')).order_by('hour')
+        year_data = qs.values('year').annotate(count=Count('id')).order_by('year')
+        country_data = qs.values('country').annotate(count=Count('id')).order_by('-count')
+        platform_data = qs.values('platform').annotate(count=Count('id')).order_by('-count')
+
+        # Latest listens: get the 10 most recent entries.
+        latest_listens = list(qs.order_by('-timestamp').values('timestamp', 'sec_played')[:10])
+
+        data = {
+            "track_name": track,
+            "artist_name": artist,
+            "album_name": album,
+            "total_seconds": total_seconds,
+            "weekday_distribution": list(weekday_data),
+            "hour_distribution": list(hour_data),
+            "year_distribution": list(year_data),
+            "country_distribution": list(country_data),
+            "platform_distribution": list(platform_data),
+            "latest_listens": latest_listens
+        }
+        return Response(data)

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ListeningHistoryListCreateView, ListeningHistoryDetailView, AllSongsView, AllAlbumsView, AllArtistsView
+from .views import ListeningHistoryListCreateView, ListeningHistoryDetailView, AllSongsView, AllAlbumsView, AllArtistsView, SongStatsView
 
 urlpatterns = [
     path('listening-history/', ListeningHistoryListCreateView.as_view(), name='listening-history-list'),
@@ -7,4 +7,5 @@ urlpatterns = [
     path('all-songs/', AllSongsView.as_view(), name='all-songs'),
     path('all-albums/', AllAlbumsView.as_view(), name='all-albums'),
     path('all-artists/', AllArtistsView.as_view(), name='all-artists'),
+    path('song-stats/', SongStatsView.as_view(), name='song-stats'),
 ]

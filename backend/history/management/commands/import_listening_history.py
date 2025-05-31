@@ -24,6 +24,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"Directory '{json_dir}' does not exist."))
             return
 
+        # Delete all existing ListeningHistory entries before importing new data
+        from history.models import ListeningHistory
+        deleted_count, _ = ListeningHistory.objects.all().delete()
+        self.stdout.write(self.style.WARNING(f"Deleted {deleted_count} existing records."))
+
+
         json_files = [f for f in os.listdir(json_dir) if f.endswith('.json')]
         if not json_files:
             self.stdout.write(self.style.WARNING(f"No JSON files found in directory '{json_dir}'."))
