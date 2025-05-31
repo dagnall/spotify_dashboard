@@ -1,4 +1,4 @@
-from django.db.models import Sum, Max, Count
+from django.db.models import Sum, Max, Min, Count
 from django.db.models.functions import Lower
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -179,5 +179,84 @@ class SongStatsView(APIView):
             "country_distribution": list(country_data),
             "platform_distribution": list(platform_data),
             "latest_listens": latest_listens
+        }
+        return Response(data)
+    
+class ArtistStatsView(APIView):
+    def get(self, request, format=None):
+        # 1) Read the 'artist' parameter from the query string
+        artist_param = request.query_params.get('artist')
+        if not artist_param:
+            return Response(
+                {"error": "artist parameter is required (e.g. ?artist=Childish%20Gambino)"},
+                status=400
+            )
+
+        # 2) Filter the listening history for this artist (case‐insensitive)
+        qs = ListeningHistory.objects.filter(artist_name__iexact=artist_param)
+
+        # If no data exists for that artist, return an empty or error response
+        if not qs.exists():
+            return Response(
+                {"error": f"No listening history found for artist '{artist_param}'"},
+                status=404
+            )
+
+        # 3) Total seconds (we’ll convert to minutes/hours later on the frontend)
+        total_seconds = qs.aggregate(total_seconds=Sum('sec_played'))['total_seconds'] or 0
+
+        # 4) Year first listened (minimum of the `year` field)
+        first_year = qs.aggregate(first_year=Min('year'))['first_year']
+
+        # 5) Unique songs listened to (distinct track_name)
+        unique_songs_count = qs.values('track_name').distinct().count()
+
+        # 6) Unique albums listened to (distinct album_name)
+        unique_albums_count = qs.values('album_name').distinct().count()
+
+        # 7) 10 Most recent listens: timestamp, track_name, seconds_played
+        recent_listens_qs = qs.order_by('-timestamp').values('timestamp', 'track_name', 'sec_played')[:10]
+        # Convert to a list of dicts
+        recent_listens = list(recent_listens_qs)
+
+        # 8) Top songs for this artist, ranked by total seconds played
+        top_songs_qs = (
+            qs.values('track_name')
+              .annotate(total_seconds=Sum('sec_played'))
+              .order_by('-total_seconds')
+        )
+        top_songs = list(top_songs_qs)
+
+        # 9) Top albums for this artist, ranked by total seconds played
+        top_albums_qs = (
+            qs.values('album_name')
+              .annotate(total_seconds=Sum('sec_played'))
+              .order_by('-total_seconds')
+        )
+        top_albums = list(top_albums_qs)
+
+        # 10) Top platforms for this artist, ranked by total seconds played
+        top_platforms_qs = (
+            qs.values('platform')
+              .annotate(total_seconds=Sum('sec_played'))
+              .order_by('-total_seconds')
+        )
+        top_platforms = list(top_platforms_qs)
+
+        # 11) List of distinct countries where this artist was listened to
+        countries_list = list(qs.values_list('country', flat=True).distinct())
+
+        # 12) Package everything into a JSON response
+        data = {
+            "artist_name": artist_param,
+            "total_seconds": total_seconds,
+            "first_year": first_year,
+            "unique_songs_count": unique_songs_count,
+            "unique_albums_count": unique_albums_count,
+            "recent_listens": recent_listens,
+            "top_songs": top_songs,
+            "top_albums": top_albums,
+            "top_platforms": top_platforms,
+            "countries": countries_list
         }
         return Response(data)

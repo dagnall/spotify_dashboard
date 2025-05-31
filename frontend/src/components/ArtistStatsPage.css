@@ -1,0 +1,79 @@
+/* ArtistStatsPage.css */
+
+.artist-stats-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.artist-profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Placeholder for future album/artist image */
+.artist-image-placeholder {
+  width: 150px;
+  height: 150px;
+  background-color: #ddd;
+  margin-right: 20px;
+  border-radius: 4px;
+}
+
+/* Basic info area next to the image */
+.artist-basic-info h2 {
+  margin: 0 0 10px 0;
+}
+
+.artist-basic-info p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+}
+
+.artist-section {
+  margin-top: 30px;
+}
+
+.artist-section h3 {
+  margin-bottom: 10px;
+}
+
+/* Simple table styling */
+.simple-table,
+.recent-listens-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.simple-table th,
+.simple-table td,
+.recent-listens-table th,
+.recent-listens-table td {
+  border: 1px solid #ccc;
+  padding: 8px 6px;
+  text-align: left;
+}
+
+.simple-table th,
+.recent-listens-table th {
+  background-color: #f2f2f2;
+}
+
+.recent-listens-table td {
+  /* smaller font for recent listens, if desired */
+  font-size: 0.9rem;
+}
+
+/* Countries list styling */
+.countries-list {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.countries-list li {
+  margin: 3px 0;
+  font-size: 0.95rem;
+}

@@ -1,7 +1,7 @@
-// src/components/AlbumsPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './AlbumsPage.css';  // Create this file for any custom styles for AlbumsPage
+import { Link } from 'react-router-dom';
+import './AlbumsPage.css';
 import NavigationBar from './NavigationBar';
 
 function AlbumsPage() {
@@ -29,7 +29,6 @@ function AlbumsPage() {
   if (loading) return <p>Loading albums...</p>;
   if (error) return <p>{error}</p>;
 
-  // Filter the albums based on the search query (case-insensitive)
   const filteredAlbums = albums.filter(album => {
     const lowerQuery = searchQuery.toLowerCase();
     return (
@@ -38,7 +37,6 @@ function AlbumsPage() {
     );
   });
 
-  // Default view when no search query: top 10 albums grid and remaining in a paginated table
   const topAlbums = albums.slice(0, 10);
   const remainingAlbums = albums.slice(10);
   const indexOfLastAlbum = currentPage * albumsPerPage;
@@ -60,7 +58,6 @@ function AlbumsPage() {
       <div className="albums-container">
         <h1>Your Albums</h1>
 
-        {/* Search Bar */}
         <div className="search-bar">
           <input
             type="text"
@@ -71,7 +68,6 @@ function AlbumsPage() {
         </div>
 
         {searchQuery ? (
-          // Display search results when there is a search query
           <div>
             <h2>Search Results</h2>
             <table>
@@ -88,7 +84,11 @@ function AlbumsPage() {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{album.album_name}</td>
-                    <td>{album.artist_name}</td>
+                    <td>
+                      <Link to={`/artist-stats?artist=${encodeURIComponent(album.artist_name)}`}>
+                        {album.artist_name}
+                      </Link>
+                    </td>
                     <td>{album.total_seconds}</td>
                   </tr>
                 ))}
@@ -96,20 +96,21 @@ function AlbumsPage() {
             </table>
           </div>
         ) : (
-          // Default view: top 10 albums in a grid, remaining albums in a paginated table
           <div>
-            {/* Top 10 Albums Grid */}
             <div className="top-albums">
               {topAlbums.map((album, index) => (
                 <div key={index} className="top-album">
                   <h3>{album.album_name}</h3>
-                  <p>{album.artist_name}</p>
+                  <p>
+                    <Link to={`/artist-stats?artist=${encodeURIComponent(album.artist_name)}`}>
+                      {album.artist_name}
+                    </Link>
+                  </p>
                   <p>{album.total_seconds} sec</p>
                 </div>
               ))}
             </div>
 
-            {/* Paginated Table for Remaining Albums */}
             <h2>Other Albums</h2>
             <div className="table-container">
               <table>
@@ -126,7 +127,11 @@ function AlbumsPage() {
                     <tr key={index}>
                       <td>{indexOfFirstAlbum + index + 11}</td>
                       <td>{album.album_name}</td>
-                      <td>{album.artist_name}</td>
+                      <td>
+                        <Link to={`/artist-stats?artist=${encodeURIComponent(album.artist_name)}`}>
+                          {album.artist_name}
+                        </Link>
+                      </td>
                       <td>{album.total_seconds}</td>
                     </tr>
                   ))}
@@ -134,7 +139,6 @@ function AlbumsPage() {
               </table>
             </div>
 
-            {/* Pagination Controls */}
             <div className="pagination">
               <button onClick={handlePrev} disabled={currentPage === 1}>Previous</button>
               <span> Page {currentPage} of {totalPages} </span>
@@ -148,4 +152,3 @@ function AlbumsPage() {
 }
 
 export default AlbumsPage;
-
